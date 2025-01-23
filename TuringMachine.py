@@ -72,13 +72,21 @@ class TuringMachine(object):
 
     def get_tape(self):
         """
-        Returns the current tape content.
+        Returns the current content of the tape as a string.
+
+        Returns:
+        -------
+        str
+            The current content of the tape.
         """
         return str(self.__tape)
 
     def step(self):
         """
-        Executes one step of the Turing Machine.
+        Executes one step of the Turing Machine based on the current state and the symbol under the head.
+
+        The method updates the tape, moves the head, and changes the state of the Turing Machine
+        according to the transition function.
         """
         char_under_head = self.__tape[self.__head_position]
         current_state_and_symbol = (self.__current_state, char_under_head)
@@ -100,9 +108,11 @@ class TuringMachine(object):
 
     def final(self):
         """
-        Returns True if the Turing Machine is in a final state, otherwise False.
+        Checks if the current state of the Turing Machine is a final state.
+
+        Returns:
+        -------
+        bool
+            True if the current state is a final state, False otherwise.
         """
-        if self.__current_state in self.__final_states:
-            return True
-        else:
-            return False
+        return self.__current_state in self.__final_states
