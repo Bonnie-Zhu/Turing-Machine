@@ -1,8 +1,37 @@
+"""
+Created by: Mr. Coxall
+Created on: Sept 2020
+
+TuringMachine.py
+
+This module contains the TuringMachine class which simulates a Turing Machine.
+
+Classes:
+--------
+TuringMachine : A class to represent a Turing Machine.
+"""
+
 import time
 from Tape import Tape
 
 
 class TuringMachine(object):
+    """
+    A class to represent a Turing Machine.
+
+    Attributes:
+    ----------
+    tape : str
+        The initial tape content.
+    blank_symbol : str
+        The symbol representing a blank space on the tape.
+    initial_state : str
+        The initial state of the Turing Machine.
+    final_states : list
+        A list of final states of the Turing Machine.
+    transition_function : dict
+        A dictionary representing the transition function of the Turing Machine.
+    """
 
     def __init__(
         self,
@@ -12,6 +41,22 @@ class TuringMachine(object):
         final_states=None,
         transition_function=None,
     ):
+        """
+        Constructs all the necessary attributes for the Turing Machine object.
+
+        Parameters:
+        ----------
+        tape : str, optional
+            The initial tape content (default is an empty string).
+        blank_symbol : str, optional
+            The symbol representing a blank space on the tape (default is a space).
+        initial_state : str, optional
+            The initial state of the Turing Machine (default is an empty string).
+        final_states : list, optional
+            A list of final states of the Turing Machine (default is None).
+        transition_function : dict, optional
+            A dictionary representing the transition function of the Turing Machine (default is None).
+        """
         self.__tape = Tape(tape)
         self.__head_position = 0
         self.__blank_symbol = blank_symbol
@@ -26,21 +71,27 @@ class TuringMachine(object):
             self.__final_states = set(final_states)
 
     def get_tape(self):
+        """
+        Returns the current tape content.
+        """
         return str(self.__tape)
 
     def step(self):
+        """
+        Executes one step of the Turing Machine.
+        """
         char_under_head = self.__tape[self.__head_position]
-        x = (self.__current_state, char_under_head)
-        if x in self.__transition_function:
-            y = self.__transition_function[x]
-            self.__tape[self.__head_position] = y[1]
-            if y[2] == "R":
+        current_state_and_symbol = (self.__current_state, char_under_head)
+        if current_state_and_symbol in self.__transition_function:
+            transition = self.__transition_function[current_state_and_symbol]
+            self.__tape[self.__head_position] = transition[1]
+            if transition[2] == "R":
                 self.__head_position += 1
                 print("  ↣ Move head 1 right")
-            elif y[2] == "L":
+            elif transition[2] == "L":
                 self.__head_position -= 1
                 print("  ↢ Move head 1 left")
-            self.__current_state = y[0]
+            self.__current_state = transition[0]
             print("             ", end="")
             for head_position_counter in range(self.__head_position):
                 print(" ", end="")
@@ -48,6 +99,9 @@ class TuringMachine(object):
             time.sleep(1.0)
 
     def final(self):
+        """
+        Returns True if the Turing Machine is in a final state, otherwise False.
+        """
         if self.__current_state in self.__final_states:
             return True
         else:
